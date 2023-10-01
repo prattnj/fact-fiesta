@@ -8,7 +8,7 @@ func main() {
 
 	e := echo.New()
 
-	port := "3004"
+	port := ":3004"
 
 	e.GET("/", HandleGetFact)
 
