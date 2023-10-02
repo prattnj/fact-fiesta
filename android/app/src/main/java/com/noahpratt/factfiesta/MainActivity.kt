@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun removeQuotes(str: String): String {
-        return str.substring(1, str.length - 2)
+        return str.substring(1, str.length - 1)
     }
 }
 
