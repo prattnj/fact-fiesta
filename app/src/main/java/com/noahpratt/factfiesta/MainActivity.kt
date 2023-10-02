@@ -1,43 +1,37 @@
 package com.noahpratt.factfiesta
 
 import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.noahpratt.factfiesta.ui.theme.FactFiestaTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            FactFiestaTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
-                }
-            }
+        setContentView(R.layout.activity_main)
+
+        updateFact()
+
+        val refreshButton = findViewById<Button>(R.id.refreshButton)
+        refreshButton.setOnClickListener {
+            updateFact()
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-            text = "Hello $name!",
-            modifier = modifier
-    )
-}
+    private fun updateFact() {
+        Thread {
+            val fact = ServerProxy().getFact()
+            runOnUiThread {
+                val factText = findViewById<TextView>(R.id.factText)
+                factText.text = removeQuotes(fact)
+            }
+        }.start()
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FactFiestaTheme {
-        Greeting("Android")
+    private fun removeQuotes(str: String): String {
+        return str.substring(1, str.length - 2)
     }
 }
+
+
+
